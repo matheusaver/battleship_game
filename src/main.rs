@@ -1,8 +1,10 @@
-use std::io;
-const MATRIX_SIZE: usize = 10;
-const HINT: &str = "Ꚛ";
-const MISS: &str = "Ο";
-const GRID: &str = "●";
+use rand::Rng;
+use std::io; // Generator of random numbers //
+const MATRIX_SIZE: usize = 10; // Size of the game board
+const SHIPS: usize = 5; // number of ships on the game board
+const HINT: &str = "Ꚛ"; // Simbol to hint a ship on game board
+const MISS: &str = "Ο"; // Simbol to miss a hit
+const GRID: &str = "●"; // Simbol of the game board grid
 
 // Function to read user's keyboard
 fn user_input() -> String {
@@ -70,7 +72,7 @@ fn print_matrix(matrix: &Vec<Vec<String>>) {
     }
 }
 
-// Function to count strings in the matrix
+// Function to count strings in the matrix, to verify how many ships are
 fn count_matrix(matrix: &Vec<Vec<String>>) -> usize {
     let mut count = 0;
     for row in matrix {
@@ -83,6 +85,21 @@ fn count_matrix(matrix: &Vec<Vec<String>>) -> usize {
     count
 }
 
+// Function to generate random positions to place ships
+fn random_ships(matrix: &mut Vec<Vec<String>>) {
+    let mut random_row_ship: [usize; SHIPS] = [0; SHIPS];
+    for i in 0..SHIPS {
+        random_row_ship[i] = rand::thread_rng().gen_range(1..MATRIX_SIZE);
+    }
+    let mut random_column_ship: [usize; SHIPS] = [0; SHIPS];
+    for i in 0..SHIPS {
+        random_column_ship[i] = rand::thread_rng().gen_range(1..MATRIX_SIZE);
+    }
+    for i in 0..SHIPS {
+        matrix[random_row_ship[i]][random_column_ship[i]] = HINT.to_string();
+    }
+}
+
 // Function to play the game
 fn play_game() {
     clearscreen::clear().unwrap();
@@ -92,8 +109,8 @@ fn play_game() {
     let mut column: usize;
     print_matrix(&masked_game_board);
 
-    // INSERIR LOGICA PARA CRIAR UMA STRING COM A POSIÇÃO RANDOM DOS NAVIOS
-    ship_game_board[8][8] = HINT.to_string();
+    random_ships(&mut ship_game_board);
+    //print_matrix(&ship_game_board); Show the position of all ships
 
     loop {
         if count_matrix(&masked_game_board) == count_matrix(&ship_game_board) {
@@ -136,12 +153,12 @@ fn play_game() {
 // Function to show info to the user
 fn game_info() {
     clearscreen::clear().unwrap();
-    println!("------------------------------------------------------------------------------");
+    println!("------------------------------------------------------------------");
     println!("Battlehip is a guessing game for one or more players.");
     println!("The player must choose a row and column to try to hit the ships");
-    println!("If there is no ship in the position, one attempt will be deducted");
-    println!("The player can miss up to 10 attempts");
-    println!("------------------------------------------------------------------------------");
+    println!("there are 5 ships randomly positioned in each game");
+    println!("You win by discovering the position of all the ships");
+    println!("------------------------------------------------------------------");
 }
 
 fn main() {
