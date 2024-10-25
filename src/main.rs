@@ -110,7 +110,7 @@ fn play_game() {
     print_matrix(&masked_game_board);
 
     random_ships(&mut ship_game_board);
-    //print_matrix(&ship_game_board); Show the position of all ships
+    //print_matrix(&ship_game_board); //Show the position of all ships
 
     loop {
         if count_matrix(&masked_game_board) == count_matrix(&ship_game_board) {
